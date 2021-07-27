@@ -1,4 +1,4 @@
-import { Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import history from '../history'
 import Header from './Header';
@@ -10,7 +10,7 @@ import { Container } from 'semantic-ui-react'
 function App() {
     return (
         <Container>
-            <Router history={history}>
+            <BrowserRouter history={history}>
                 <div>
                     <Header />
                     <Switch>
@@ -18,7 +18,7 @@ function App() {
                         <Route path='/weather' exact component={Weather} />
                     </Switch>
                 </div>
-            </Router>
+            </BrowserRouter>
         </Container>
     );
 }

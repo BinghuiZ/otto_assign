@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-import history from '../history'
 import Header from './Header';
 import ToDo from './ToDo';
 import Weather from './Weather';
@@ -10,7 +9,7 @@ import { Container } from 'semantic-ui-react'
 function App() {
     return (
         <Container>
-            <BrowserRouter history={history}>
+            <BrowserRouter>
                 <div>
                     <Header />
                     <Switch>

@@ -1,7 +1,8 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 
-import { Form, Input, Label } from 'semantic-ui-react'
+import { Form, Input, Card, Divider, Image } from 'semantic-ui-react'
+import { convertDateTime, getDayOfWeek } from '../utils/utils'
 
 const Weather = () => {
     const [current, setCurrent] = useState({})
@@ -19,7 +20,13 @@ const Weather = () => {
             if (weatherResult.status === 200) {
                 setCurrent(weatherResult.data.current)
                 setDaily(weatherResult.data.daily)
+            } else {
+                setCurrent({})
+                setDaily([])
             }
+        } else {
+            setCurrent({})
+            setDaily([])
         }
     };
 
@@ -30,15 +37,35 @@ const Weather = () => {
     const getWeatherViews = () => {
         console.log('getWeatherViews')
         console.log(daily)
-        return daily.map( (w) => {
-            return(
-                <div key={w.dt}>
-                    <h2>{w.weather[0]?.main}</h2>
-                    <h2>{w.temp?.day}</h2>
-                    <h2>{w.feels_like?.day}</h2>
-                </div>
-            )
-        })
+        if (daily.length > 0) {
+            return daily.map( (w) => {
+                return(
+                    <Card key={w.dt}>
+                        <Card.Content>
+                            <Image 
+                                floated='right'
+                                size='mini'
+                                src={`http://openweathermap.org/img/wn/${w.weather[0]?.icon}@2x.png`} 
+                            />
+                            <Card.Header>{convertDateTime(w.dt)}</Card.Header>
+                            <Card.Meta>{getDayOfWeek(w.dt)}</Card.Meta>
+                            <Card.Description>
+                                <p>Temp: {w.temp.min} | {w.temp.max} &#8451;</p>
+                                <p>Humidity: {w.humidity}%</p>
+                            </Card.Description>
+                        </Card.Content>
+                        <Card.Content extra>
+                            <Card.Description>
+                                <p>{w.weather[0]?.main}</p>
+                                <p>{w.weather[0]?.description}</p>
+                            </Card.Description>
+                        </Card.Content>
+                    </Card>
+                )
+            })
+        } else {
+            return <div>No Match city</div>
+        }
     }
 
     return (
@@ -51,9 +78,11 @@ const Weather = () => {
                     }}  />   
                 </Form.Field>
             </Form>
-            <div>
+            <Divider />
+            <h2>Daily Weather of {typedWord}</h2>
+            <Card.Group>
                 { getWeatherViews() }
-            </div>
+            </Card.Group>
         </div>
     )
 }

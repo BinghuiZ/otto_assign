@@ -4,14 +4,22 @@ import React, { useState, useEffect } from 'react'
 import { Form, Input, Label } from 'semantic-ui-react'
 
 const Weather = () => {
-    const [weather, setWeather] = useState([]);
+    const [current, setCurrent] = useState({})
+    const [daily, setDaily] = useState([]);
     const [typedWord, setTypedWord] = useState('Hong Kong')
 
     const getWeather = async (keyword) => {
-        let response = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${keyword}&cnt=7&units=metric&appid=ac6427222963e24140376f46e44d3bd7`);
-        console.log(response)
-        if (response.status === 200) {
-            setWeather(response.data.list)
+        let lcoationResult = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${keyword}&units=metric&cnt=1&appid=ac6427222963e24140376f46e44d3bd7`);
+        console.log(`lcoationResult`)
+        console.log(lcoationResult)
+        if (lcoationResult.status === 200) {
+            let weatherResult = await axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lcoationResult.data.city.coord.lat}&lon=${lcoationResult.data.city.coord.lon}&units=metric&exclude=minutely,hourly&appid=ac6427222963e24140376f46e44d3bd7`)
+            console.log(`weatherResult`)
+            console.log(weatherResult)
+            if (weatherResult.status === 200) {
+                setCurrent(weatherResult.data.current)
+                setDaily(weatherResult.data.daily)
+            }
         }
     };
 
@@ -21,13 +29,13 @@ const Weather = () => {
 
     const getWeatherViews = () => {
         console.log('getWeatherViews')
-        console.log(weather)
-        return weather.map( (w) => {
+        console.log(daily)
+        return daily.map( (w) => {
             return(
                 <div key={w.dt}>
-                    <h1>hello world</h1>
-                    <h2>{w.dt_txt}</h2>
-                    <h2>{w.main?.feels_like}</h2>
+                    <h2>{w.weather[0]?.main}</h2>
+                    <h2>{w.temp?.day}</h2>
+                    <h2>{w.feels_like?.day}</h2>
                 </div>
             )
         })

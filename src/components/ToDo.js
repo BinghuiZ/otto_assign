@@ -9,23 +9,22 @@ const ToDo = () => {
     const handleSubmit = (e) => {
         console.log(`submited   :   ${typedWord}`)
         e.preventDefault()
-        let todo = { toDoText: typedWord, done: false }
-        console.log(todo)
-        let copiedList = [...todoList]
-        copiedList.push(todo)
+        let copiedList = [].concat(todoList)
+        console.log('copied', copiedList)
+        copiedList.push({ toDoText: typedWord, done: false })
+        console.log('copied added', copiedList)
         setTodoList(copiedList)
         setTypedWord('')
-        console.log(todoList)
     }
 
     const toggleCheckBox = (index) => {
-        let copiedList = [...todoList]
+        let copiedList = [].concat(todoList)
         copiedList[index].done = !copiedList[index].done
         setTodoList(copiedList)
     }
 
     const deleteButtonClicked = (index) => {
-        let copiedList = [...todoList]
+        let copiedList = [].concat(todoList)
         copiedList.splice(index, 1)
         setTodoList(copiedList)
     }
@@ -35,7 +34,9 @@ const ToDo = () => {
         return todoList.map((todo, index) => {
             return (
                 <div key={index}>
-                    <Checkbox checked={todo.done} onClick={toggleCheckBox(index)} /> {todo.toDoText} <Button icon='delete' size='mini' onClick={deleteButtonClicked(index)} />
+                    <Checkbox checked={todo.done} onClick={ () => {toggleCheckBox(index)}} />
+                     {todo.toDoText} 
+                     <Button icon='delete' size='mini' onClick={ () => {deleteButtonClicked(index)} } />
                 </div>
             )
         })
